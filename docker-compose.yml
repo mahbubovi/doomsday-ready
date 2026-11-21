@@ -1,0 +1,23 @@
+services:
+  mongo:
+    image: mongo:7
+    volumes:
+      - mongo-data:/data/db
+  api:
+    build: ./server
+    environment:
+      MONGO_URI: mongodb://mongo:27017/doomsday-ready
+      PORT: 5000
+      SEED_ON_EMPTY: "true"
+    depends_on:
+      - mongo
+    ports:
+      - "5000:5000"
+  web:
+    build: ./client
+    depends_on:
+      - api
+    ports:
+      - "3000:80"
+volumes:
+  mongo-data:
